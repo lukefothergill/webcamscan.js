@@ -1,0 +1,27 @@
+<html>
+<head>
+	<title>WebcamScan.js test page</title>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script type="text/javascript" src="src/webcamscan.js"></script>
+	<script type="text/javascript" src="src/get_barcode_from_image.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('#container').webcamscan();
+			$('#start').click(function() {
+				$('#container').webcamscan('scan');
+			});
+			$('#stop').click(function() {
+				$('#container').webcamscan('stop');
+			});
+		});
+	</script>
+</head>
+<body>
+	<div id="container">
+		<p>Waiting for video stream...</p>
+	</div>
+	<input type="button" value="Start" id="start" />
+	<input type="button" value="Stop" id="stop" />
+	<img id="barcodeImage" src="barcode.jpg" />
+</body>
+</html>
