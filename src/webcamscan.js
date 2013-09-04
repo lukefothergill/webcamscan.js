@@ -1,7 +1,7 @@
 /*
  * webcamscan.js
  * https://github.com/rcluke/webcamscan.js
- * @returns {Boolean}
+ * Copyright 2013
  */
 
 (function( $ ) {
@@ -9,7 +9,7 @@
 	var options = {
 		width       : '640',
 		height      : '480',
-		refreshRate : 1000,
+		refreshRate : 500,
 		onReject : function(e) {
 			console.log('User rejected media request', e);
 		},
@@ -19,12 +19,22 @@
 		}
 	};
 	
+	var staticMethods = {
+		isAvailable : function() {
+			return !!(navigator.getUserMedia 
+					|| navigator.webkitGetUserMedia
+					|| navigator.mozGetUserMedia
+					|| navigator.msGetUserMedia);			
+		}
+	};
+	
 	var methods = {
 		init : function(userOptions) {
 			$.extend( options, userOptions );
 			
-			if ($(this).webcamscan('isAvailable')) {
+			if ($.webcamscan('isAvailable')) {
 				$(this).html('<video autoplay></video><canvas style="display:none;" width="' + options.width + '" height="' + options.height + '"></canvas>');
+				$(this).append('<img id="barcodeImage" style="display:none;" src="" />');
 				video = $(this).find('video')[0];
 				canvas = $(this).find('canvas')[0];
 				ctx = canvas.getContext('2d');
@@ -52,12 +62,6 @@
 		stop : function() {
 			localMediaStream.stop();
 			clearInterval(processor);
-		},
-		isAvailable : function() {
-			return !!(navigator.getUserMedia 
-					|| navigator.webkitGetUserMedia
-					|| navigator.mozGetUserMedia
-					|| navigator.msGetUserMedia);			
 		}
 	};
 	
@@ -77,4 +81,10 @@
 			return methods.init.apply(this, arguments);
 		}
 	};
+	
+	$.webcamscan = function(staticMethod) {
+		if (staticMethods[staticMethod]) {
+			return staticMethods[staticMethod].apply(this, [].slice.call(arguments, 1));
+		}
+	}
 })(jQuery);
